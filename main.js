@@ -15,6 +15,8 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create:
     var score = 0;
     var scoreText;
 
+    var thNature = false;
+
     //for bullets
     var bullets;
 
