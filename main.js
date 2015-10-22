@@ -9,11 +9,12 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create:
     	game.load.image('star', 'assets/star.png');
         game.load.image('bullet', 'assets/aqua_ball.png');
     	game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        game.load.spritesheet('baddie', 'assets/baddie.png', 32, 48);
     }
 
     var stars;
     var score = 0;
-    var scoreText;
+    var bmpText;
 
     var thNature = false;
 
@@ -79,6 +80,28 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create:
         player.animations.add('left', [0, 1, 2, 3], 10, true);
         player.animations.add('right', [5, 6, 7, 8], 10, true);
 
+       
+        /**
+        * Here we are creating an enemy
+        */
+        enemy = game.add.sprite(42, game.world.height - 150, 'enemy');
+
+         //We need to enable physics to player
+         game.physics.arcade.enable(enemy);
+
+         //  Player physics properties. Give the little guy a slight bounce.
+         enemy.body.bounce.y = 0.2;
+         enemy.body.gravity.y = 300;
+         enemy.body.collideWorldBounds = true;
+
+        game.physics.arcade.enable(enemy);
+
+        enemy.body.bounce.y = 0.2;
+        enemy.body.gravity.y = 300;
+        enemy.body.collideWorldBounds = true;
+
+
+
         //Player controles
         cursors = game.input.keyboard.createCursorKeys();
 
@@ -104,6 +127,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create:
         bullets.createMultiple(50, 'bullet');
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
+
     }
 
     function update () {
@@ -114,6 +138,17 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create:
 
     	//  Collide the player and the stars with the platforms
         game.physics.arcade.collide(player, platforms);
+        game.physics.arcade.collide(enemy, platforms);
+
+        enemy.body.velocity.x = 10;
+
+        var goesX = parseInt(enemy.x);
+        
+        // // console.log(enemy.x);
+        if (enemy.x > 100) {
+            // console.log("done");
+            
+        }
 
         //	reset the players velocity (movement)
         player.body.velocity.x = 0;
@@ -143,7 +178,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create:
         // Allow the player to jump if they're touching the ground
         if (cursors.up.isDown && player.body.touching.down) 
         {
-        	player.body.velocity.y = -350;
+        	player.body.velocity.y = -150;
         }
 
         // Shoot
@@ -158,14 +193,14 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create:
         // Removes the star from the screen
         star.kill();
 
-        // Add and update score
+       // Add and update score
         score += 10;
         scoreText.text = 'Score'+ score;
     }
 
     function shootStar (bullets, star) {
         star.kill();
-
+        
         score += 10;
         scoreText.text = 'Scopre'+ score;
     }
